@@ -1,6 +1,10 @@
 package world.ucode.objects;
 
+import world.ucode.util.Animation;
+import world.ucode.util.Resource;
+
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 import static world.ucode.inerface.Screen.GRAVITY;
 import static world.ucode.inerface.Screen.GROUND;
@@ -9,11 +13,19 @@ public class Character {
     private float x = 0;
     private float y = 0;
     private float speedY = 0;
+    private Animation characterRun;
+
+    public Character() {
+        characterRun = new Animation(200);
+        characterRun.addFrame(Resource.getResourceImage("src/main/resources/main-character1.png"));
+        characterRun.addFrame(Resource.getResourceImage("src/main/resources/main-character2.png"));
+    }
 
     public void update() {
-        if (y >= GROUND - 100) {
+        characterRun.update();
+        if (y >= GROUND - characterRun.getFrame().getHeight()) {
             speedY = 0;
-            y = GROUND - 100;
+            y = GROUND - characterRun.getFrame().getHeight();
         }
         else {
             speedY += GRAVITY;
@@ -23,7 +35,8 @@ public class Character {
 
     public void draw(Graphics g) {
         g.setColor(Color.black);
-        g.drawRect((int)x, (int)y, 100, 100);
+        g.drawRect((int)x, (int)y, characterRun.getFrame().getWidth(), characterRun.getFrame().getHeight());
+        g.drawImage(characterRun.getFrame(), (int)x, (int)y, null);
     }
 
     public void jump() {
