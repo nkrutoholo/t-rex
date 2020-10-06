@@ -14,11 +14,14 @@ public class Character {
     private float y = 0;
     private float speedY = 0;
     private Animation characterRun;
+    private Rectangle rect;
+    private boolean isAlive = true;
 
     public Character() {
         characterRun = new Animation(200);
         characterRun.addFrame(Resource.getResourceImage("src/main/resources/main-character1.png"));
         characterRun.addFrame(Resource.getResourceImage("src/main/resources/main-character2.png"));
+        rect = new Rectangle();
     }
 
     public void update() {
@@ -31,6 +34,14 @@ public class Character {
             speedY += GRAVITY;
             y += speedY;
         }
+        rect.x = (int)x;
+        rect.y = (int)y;
+        rect.width = characterRun.getFrame().getWidth();
+        rect.height = characterRun.getFrame().getHeight();
+    }
+
+    public Rectangle getBound() {
+        return rect;
     }
 
     public void draw(Graphics g) {
@@ -66,5 +77,13 @@ public class Character {
 
     public void setSpeedY(float speedY) {
         this.speedY = speedY;
+    }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
+    }
+
+    public boolean getAlive() {
+        return isAlive;
     }
 }

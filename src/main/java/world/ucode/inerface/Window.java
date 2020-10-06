@@ -20,9 +20,5 @@ public class Window extends JFrame {
         gScreen.startGame();
     }
 
-    public static void main(String args[]) {
-        Window rex = new Window();
-        rex.setVisible(true);
-        rex.startGame();
-    }
+
 }
