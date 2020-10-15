@@ -6,11 +6,14 @@ import world.ucode.util.Resource;
 //import world.ucode.inerface.Screen;
 
 import javax.swing.*;
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class Screen extends JPanel implements Runnable, KeyListener {
     public static final int FIRST_STATE = 0;
@@ -31,16 +34,23 @@ public class Screen extends JPanel implements Runnable, KeyListener {
     private int gameState = FIRST_STATE;
 
     private BufferedImage gameOver;
+    private AudioClip scoreUpSound;
 
     public Screen() {
         thread = new Thread(this);
         character = new Character();
         character.setX(50);
+        character.setY(87);
         land = new Land(this);
         clouds = new Clouds();
 //        cactus = new Cactus();
         enemiesManager = new EnemyManager(character, this);
         gameOver = Resource.getResourceImage("src/main/resources/gameover_text.png");
+        try {
+            scoreUpSound = Applet.newAudioClip(new URL("file", "", "src/main/resources/scoreup.wav"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void startGame() {
@@ -77,14 +87,15 @@ public class Screen extends JPanel implements Runnable, KeyListener {
 
     public void plusScore(int score) {
         this.score += score;
+        scoreUpSound.play();
     }
 
     @Override
     public void paint(Graphics g) {
         g.setColor(Color.decode("#f7f7f7"));
         g.fillRect(0, 0, getWidth(), getHeight());
-        g.setColor(Color.red);
-        g.drawLine(0, (int)GROUND, getWidth(), (int)GROUND);
+//        g.setColor(Color.red);
+//        g.drawLine(0, (int)GROUND, getWidth(), (int)GROUND);
 
         switch(gameState) {
             case FIRST_STATE:
@@ -108,6 +119,13 @@ public class Screen extends JPanel implements Runnable, KeyListener {
 
     }
 
+    private void resetGame() {
+        character.setAlive(true);
+        character.setX(50);
+        character.setY(87);
+        enemiesManager.reset();
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {}
 
@@ -118,15 +136,16 @@ public class Screen extends JPanel implements Runnable, KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-//        System.out.println("Key released");
         switch(e.getKeyCode()) {
             case KeyEvent.VK_SPACE:
                 if(gameState == FIRST_STATE) {
                     gameState = PLAY_STATE;
+                } else if(gameState == PLAY_STATE) {
+                    character.jump();
+                } else if(gameState == OVER_STATE) {
+                    resetGame();
+                    gameState = PLAY_STATE;
                 }
-                character.jump();
-//                if(character.getY() == GROUND + 50)
-//                    character.jump();
                 break;
         }
     }
