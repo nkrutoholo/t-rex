@@ -42,9 +42,9 @@ public class Clouds {
         clouds.add(cloud1);
     }
 
-    public void update() {
+    public void update(int gameSpeed) {
         for(Cloud cloud: clouds) {
-            cloud.posX --;
+            cloud.posX -= gameSpeed / 2;
         }
         Cloud firstCloud = clouds.get(0);
         if(firstCloud.posX + cloudImage.getWidth() < 0) {

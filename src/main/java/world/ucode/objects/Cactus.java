@@ -21,8 +21,8 @@ public class Cactus extends Enemy {
         rect = new Rectangle();
     }
 
-    public void update() {
-        posX -= 2;
+    public void update(int gameSpeed) {
+        posX -= gameSpeed;
         rect.x = posX;
         rect.y = posY;
         rect.width = image.getWidth();
@@ -49,6 +49,8 @@ public class Cactus extends Enemy {
 
     public void setImage(BufferedImage image) {
         this.image = image;
+        if (image.getWidth() == 49)
+            posY = 95;
     }
 
     @Override

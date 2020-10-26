@@ -33,9 +33,9 @@ public class Land {
         }
     }
 
-    public void update() {
+    public void update(int gameSpeed) {
         for(ImageLand imageLand : listImg) {
-            imageLand.posX -= 2;
+            imageLand.posX -= gameSpeed;
         }
         ImageLand fistElement = listImg.get(0);
         if(fistElement.posX + imageLand1.getWidth() < 0) {

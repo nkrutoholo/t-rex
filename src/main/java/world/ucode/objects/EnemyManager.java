@@ -26,24 +26,25 @@ public class EnemyManager {
         imageCactus2 = Resource.getResourceImage("src/main/resources/cactus2.png");
         random = new Random();
 
-        enemies.add(getRandomCactus());
+        enemies.add(getRandomEnemy());
     }
 
-    public void update() {
+    public void update(int gameSpeed, boolean isDown) {
         for(Enemy e : enemies) {
-            e.update();
+            e.update(gameSpeed);
             if(e.isOver() && !e.isScoreGot()) {
                 screen.plusScore(20);
+                screen.plusSpeed();
                 e.setIsScoreGot(true);
             }
-            if(e.getBound().intersects(character.getBound())) {
+            if(e.getBound().intersects(character.getBound(isDown))) {
                 character.setAlive(false);
             }
         }
         Enemy firstEnemy = enemies.get(0);
         if(firstEnemy.isOutOfScreen()) {
             enemies.remove(firstEnemy);
-            enemies.add(getRandomCactus());
+            enemies.add(getRandomEnemy());
         }
     }
 
@@ -55,7 +56,7 @@ public class EnemyManager {
 
     public void reset() {
         enemies.clear();
-        enemies.add(getRandomCactus());
+        enemies.add(getRandomEnemy());
     }
 
     private Cactus getRandomCactus() {
@@ -68,5 +69,22 @@ public class EnemyManager {
             cactus.setImage(imageCactus2);
         }
         return cactus;
+    }
+
+    private Birds getRandomBird() {
+        Birds birb;
+        birb = new Birds(character);
+        birb.setX(600);
+
+        return birb;
+    }
+
+    private Enemy getRandomEnemy() {
+        if(random.nextBoolean()) {
+            return getRandomCactus();
+        }
+        else {
+            return getRandomBird();
+        }
     }
 }
